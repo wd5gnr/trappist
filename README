@@ -1,0 +1,49 @@
+# Function to help manage traps
+# Al Williams - Hackaday, August 2019
+#
+# Here's what it does:
+# 1) Provide a function trappist_trap
+# 2) Call trappist_init with or without arguments
+#
+# If you forget to provide trappist_trap, a stupid one will be provided but you can
+# still override it later
+# With no arguments to trappist_init, all signals you can catch go through your function with an argument indicating which signal fired
+# You can ignore it or reraise it as shown in the default handler (see below)
+# Of course, you can't do anything with signals you can't catch (e.g., kill -9)
+#
+# If you provide a list of signals that start with + or -, you will cause those signals to get the default handler (+) or
+# to be ignored totally (-) assuming you are allowed to ignore the signal.
+# Example:
+# trappist_init +SIGQUIT -SIGHUP -SIGILL
+#
+# If you use the first argument as = you will ONLY catch the signals you name by themselves or with an = prefix and then
+# you can also use the + and - prefix, although since + will be the default, you'll probably only need -
+# Example:
+# trappist_init = SIGQUIT SIGHUP
+# trappist_init = =SIGQUIT =SIGHUP  # same as above
+# trappist_init = SIGQUIT -SIGHUP
+#
+# For regularity, you can use @ as the first argument to get the default behavior
+# trappist_init @ +SIGQUIT -SIGHUP -SIGILL   # same as earlier example without @ or = 
+#
+# Normally, you should define your trappist_trap function and then source this file (. /path/to/trappist.sh)
+# However, you can define trappist_trap afterwards
+
+Example code:
+
+  # Really simple trap handler
+    function trappist_trap()
+    {
+       echo Trap: $1
+    }
+
+
+   # test harness
+   trappist_init 
+   echo Trap me @ $$!
+   while true
+   do sleep 5  # Note: most signals won't happen until after sleep returns!
+      echo Still going
+   done
+
+
