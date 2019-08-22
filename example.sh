@@ -2,6 +2,7 @@
 
 # Require 3 Control C's in 10 seconds to exit
 TRAP_DOWNCT=3
+ALARMPID=
 
 function trappist_trap()
 {
@@ -13,6 +14,10 @@ function trappist_trap()
 	SIGINT)
 	    if (( --TRAP_DOWNCT == 0 ))   # Did we get our 3?
 	    then
+		if [ ! -z "$ALARMPID" ]
+		then
+		    kill -9 $ALARMPID
+		fi
 		echo Bye bye!
 		exit
 	    else
@@ -21,6 +26,7 @@ function trappist_trap()
 		then
 		    ALRMPID=$$
 		    ( trap "" SIGINT ; sleep 10 ; kill -SIGALRM $ALRMPID ) &   # set alarm process to tell us to reset count later
+		    ALARMPID=$!
 		fi
 	    fi
 	;;
