@@ -1,5 +1,5 @@
 # Function to help manage traps
-# Al Williams - Hackaday, August 2019
+# Al Williams - Hackaday, August 2019 https://hackaday.com/2019/08/26/linux-fu-its-a-trap/
 #
 # Here's what it does:
 # 1) Provide a function trappist_trap
